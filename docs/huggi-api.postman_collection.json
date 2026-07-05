@@ -1,0 +1,1557 @@
+{
+  "info": {
+    "name": "Huggi Hospital Queue API",
+    "description": "REST API for Huggi Super App — clinic queue and appointment management for Indian clinics.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "clinic_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Staff login with email and password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/auth/staff/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "auth",
+                "staff",
+                "login"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Patient login via Firebase OTP phone verification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/auth/patient/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "auth",
+                "patient",
+                "login"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Rotate refresh token and issue a new token pair",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/auth/refresh",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Revoke refresh token on the server and clear session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clinics",
+      "item": [
+        {
+          "name": "List all clinics (super admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/clinics",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "clinics"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create a new clinic (super admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/clinics",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "clinics"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get clinic details including staff roster",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/clinics/{clinicId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "clinics",
+                "{clinicId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update clinic details",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/clinics/{clinicId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "clinics",
+                "{clinicId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete a clinic (super admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/clinics/{clinicId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "clinics",
+                "{clinicId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List clinic staff users (admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "users"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create a staff user and assign a clinic role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "users"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get a single staff user",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/users/{userId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "users",
+                "{userId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update a staff user (name, phone, role)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/users/{userId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "users",
+                "{userId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Remove a staff user from the clinic",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/users/{userId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "users",
+                "{userId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "List doctors for a clinic",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/doctors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "doctors"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create a doctor profile for an existing user (admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/doctors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "doctors"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get a single doctor profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/doctors/{doctorId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "doctors",
+                "{doctorId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update doctor specialization, duration, or availability (admin only)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/doctors/{doctorId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "doctors",
+                "{doctorId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete a doctor profile (admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/doctors/{doctorId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "doctors",
+                "{doctorId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "Get authenticated patient's own profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/patients/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "patients",
+                "me"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List active patients for a clinic",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/patients",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "patients"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register a new patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/patients",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "patients"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get a single patient record",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/patients/{patientId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "patients",
+                "{patientId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update patient notes or active status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/patients/{patientId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "patients",
+                "{patientId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Soft-delete a patient (sets isActive=false, preserves history)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/patients/{patientId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "patients",
+                "{patientId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "List all appointments for a clinic (staff only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/appointments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "appointments"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Book a new appointment (staff only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/appointments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "appointments"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get authenticated patient's own appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/appointments/mine",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "appointments",
+                "mine"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get appointments for a specific patient (staff only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/appointments/by-patient/{patientId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "appointments",
+                "by-patient",
+                "{patientId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get a single appointment by ID (staff only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/appointments/{appointmentId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "appointments",
+                "{appointmentId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update appointment time, status, or notes (staff only)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/appointments/{appointmentId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "appointments",
+                "{appointmentId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Hard-delete an appointment and its queue entry (admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/appointments/{appointmentId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "appointments",
+                "{appointmentId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel an appointment and remove its queue entry (staff only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/appointments/{appointmentId}/cancel",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "appointments",
+                "{appointmentId}",
+                "cancel"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Queue",
+      "item": [
+        {
+          "name": "List clinic queue entries, optionally filtered by status (staff only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/queue",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "queue"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get authenticated patient's current queue position",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/queue/my-position",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "queue",
+                "my-position"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get a single queue entry by ID (staff only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/queue/{queueId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "queue",
+                "{queueId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update queue entry status (staff only)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/queue/{queueId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "queue",
+                "{queueId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_note\": \"Fill in request body per schema\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete a queue entry and recompact positions (admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/queue/{queueId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "api",
+                "queue",
+                "{queueId}"
+              ],
+              "variable": []
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

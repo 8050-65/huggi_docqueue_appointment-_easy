@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: huggi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: huggi
+      POSTGRES_USER: huggi
+      POSTGRES_PASSWORD: huggi_dev_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - huggi-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U huggi -d huggi"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  huggi-postgres-data:
+    driver: local

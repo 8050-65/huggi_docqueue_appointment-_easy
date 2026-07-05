@@ -1,0 +1,248 @@
+// apps/api/prisma/schema.prisma
+// Huggi backend — Prisma schema
+//
+// Architecture rule (CLAUDE.md #1): Every tenant-owned table must have clinic_id.
+// Architecture rule (CLAUDE.md #9): Every schema change must include a migration
+// file and updated seed logic if required.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Clinic — tenant root table
+// All tenant-owned tables FK to this via clinic_id.
+// At MVP, exactly one Clinic row exists (manually onboarded).
+// ─────────────────────────────────────────────────────────────
+model Clinic {
+  id         String    @id @default(uuid()) @db.Uuid
+  name       String
+  address    String
+  phone      String
+  configJson Json      @default("{}") @map("config_json")
+  isActive   Boolean   @default(true) @map("is_active")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  clinicUsers ClinicUser[]
+  auditLogs   AuditLog[]
+
+  @@index([isActive])
+  @@map("clinics")
+}
+
+// ─────────────────────────────────────────────────────────────
+// User — global identity (patients + staff + super admin)
+// Patients authenticate via Firebase OTP → firebaseUid set.
+// Staff authenticate via email + password → passwordHash set.
+// Super admins flagged by isSuperAdmin (no clinic membership required).
+// ─────────────────────────────────────────────────────────────
+model User {
+  id             String    @id @default(uuid()) @db.Uuid
+  phone          String?   @unique
+  email          String?   @unique
+  name           String
+  passwordHash   String?   @map("password_hash")
+  firebaseUid    String?   @unique @map("firebase_uid")
+  consentGivenAt DateTime? @map("consent_given_at")
+  isSuperAdmin   Boolean   @default(false) @map("is_super_admin")
+  isActive       Boolean   @default(true) @map("is_active")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  clinicUsers   ClinicUser[]
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+  doctor        Doctor?
+  patient       Patient?
+
+  @@index([phone])
+  @@index([email])
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Role — fixed catalog: SUPER_ADMIN / CLINIC_ADMIN / STAFF / PATIENT
+// Seeded once; never edited at runtime.
+// ─────────────────────────────────────────────────────────────
+model Role {
+  id          String       @id @default(uuid()) @db.Uuid
+  name        String       @unique
+  description String?
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  clinicUsers ClinicUser[]
+
+  @@map("roles")
+}
+
+// ─────────────────────────────────────────────────────────────
+// ClinicUser — join: which user has which role at which clinic
+// Staff and patients both get a ClinicUser row at registration.
+// Super admins are excluded (handled via User.isSuperAdmin).
+// ─────────────────────────────────────────────────────────────
+model ClinicUser {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  clinicId  String   @map("clinic_id") @db.Uuid
+  roleId    String   @map("role_id") @db.Uuid
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user   User   @relation(fields: [userId], references: [id])
+  clinic Clinic @relation(fields: [clinicId], references: [id])
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  @@unique([userId, clinicId, roleId])
+  @@index([clinicId])
+  @@index([userId])
+  @@map("clinic_users")
+}
+
+// ─────────────────────────────────────────────────────────────
+// RefreshToken — hashed refresh tokens for JWT rotation
+// Stored hash never the raw token. Revocable via revokedAt.
+// ─────────────────────────────────────────────────────────────
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  tokenHash String    @unique @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+// ─────────────────────────────────────────────────────────────
+// AuditLog — immutable log of staff-initiated changes
+// Direct AuditService.log() calls populate this (no event bus at MVP).
+// ─────────────────────────────────────────────────────────────
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  clinicId   String   @map("clinic_id") @db.Uuid
+  userId     String?  @map("user_id") @db.Uuid
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String?  @map("entity_id")
+  metadata   Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  clinic Clinic @relation(fields: [clinicId], references: [id])
+  user   User?  @relation(fields: [userId], references: [id])
+
+  @@index([clinicId, createdAt])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Doctor — clinic staff profile for appointment booking
+// One Doctor per User (1:1 relationship).
+// Clinic-scoped via clinic_id.
+// ─────────────────────────────────────────────────────────────
+model Doctor {
+  id                   String   @id @default(uuid()) @db.Uuid
+  userId               String   @unique @map("user_id") @db.Uuid
+  clinicId             String   @map("clinic_id") @db.Uuid
+  specialization       String   @default("General")
+  consultationDuration Int      @default(30) @map("consultation_duration")
+  isAvailable          Boolean  @default(true) @map("is_available")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id])
+  appointments Appointment[]
+
+  @@index([clinicId])
+  @@index([isAvailable])
+  @@map("doctors")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Patient — clinic patient profile for appointments
+// One Patient per User (1:1 relationship).
+// Clinic-scoped via clinic_id.
+// ─────────────────────────────────────────────────────────────
+model Patient {
+  id       String   @id @default(uuid()) @db.Uuid
+  userId   String   @unique @map("user_id") @db.Uuid
+  clinicId String   @map("clinic_id") @db.Uuid
+  notes    String?
+  isActive Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id])
+  appointments Appointment[]
+
+  @@index([clinicId])
+  @@index([isActive])
+  @@map("patients")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Appointment — booking: patient + doctor at a time slot
+// Clinic-scoped via clinic_id.
+// Status machine: booked → checked_in → called → in_consultation → done
+//                 (also: cancelled, no_show)
+// ─────────────────────────────────────────────────────────────
+model Appointment {
+  id              String   @id @default(uuid()) @db.Uuid
+  clinicId        String   @map("clinic_id") @db.Uuid
+  patientId       String   @map("patient_id") @db.Uuid
+  doctorId        String   @map("doctor_id") @db.Uuid
+  appointmentTime DateTime @map("appointment_time")
+  status          String   @default("booked")
+  notes           String?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+  queue   Queue?
+
+  @@index([clinicId])
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([appointmentTime])
+  @@index([status])
+  @@map("appointments")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Queue — real-time status of patients in clinic queue
+// One Queue row per Appointment.
+// Status machine: waiting → called → in_consultation → done
+// ─────────────────────────────────────────────────────────────
+model Queue {
+  id                    String    @id @default(uuid()) @db.Uuid
+  clinicId              String    @map("clinic_id") @db.Uuid
+  appointmentId         String    @unique @map("appointment_id") @db.Uuid
+  status                String    @default("waiting")
+  position              Int       @default(0)
+  calledAt              DateTime? @map("called_at")
+  consultationStartedAt DateTime? @map("consultation_started_at")
+  consultationEndedAt   DateTime? @map("consultation_ended_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+
+  @@index([clinicId])
+  @@index([status])
+  @@index([appointmentId])
+  @@map("queues")
+}

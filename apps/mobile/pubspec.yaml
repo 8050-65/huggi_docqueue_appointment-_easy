@@ -1,0 +1,55 @@
+name: huggi_patient_app
+description: "Huggi Patient Mobile App - Hospital Queue Management"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.24.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Navigation
+  go_router: ^14.1.0
+  flutter_riverpod: ^2.4.10
+
+  # Firebase
+  firebase_core: ^3.3.0
+  firebase_auth: ^5.1.4
+  firebase_messaging: ^15.0.2
+
+  # HTTP & API
+  dio: ^5.4.0
+  json_annotation: ^4.9.0
+
+  # Storage & Caching
+  flutter_secure_storage: ^9.2.2
+  hive: ^2.2.0
+  hive_flutter: ^1.1.0
+
+  # Notifications
+  flutter_local_notifications: ^17.0.0
+
+  # Time & Formatting
+  intl: ^0.19.0
+
+  # Utils
+  logger: ^2.1.0
+  get_it: ^7.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+  # Code Generation
+  mockito: ^5.4.4
+  json_serializable: ^6.8.0
+  build_runner: ^2.4.6
+
+flutter:
+  uses-material-design: true
