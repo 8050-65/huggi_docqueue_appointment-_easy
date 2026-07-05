@@ -6,9 +6,13 @@ apps/mobile/flutter/
 .turbo/
 dist/
 .next/
+*.tsbuildinfo
 apps/mobile/.dart_tool/
 apps/mobile/build/
 apps/mobile/coverage/
+
+# Local assistant/tooling state
+.claude/
 
 # Environment files — never commit
 .env

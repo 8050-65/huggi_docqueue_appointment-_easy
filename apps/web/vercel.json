@@ -1,0 +1,5 @@
+{
+  "installCommand": "cd ../.. && pnpm install --filter @huggi/web...",
+  "buildCommand": "cd ../.. && pnpm --filter @huggi/web build",
+  "outputDirectory": ".next"
+}
